@@ -10,31 +10,28 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    Email:{
-        type: String,
-        required: true
-    },
     Password:{
         type: String,
         required: true
+    },
+    Profile_Pic:{
+        type: String,
+        required: true,
+        default:'images/profile.jpg'
     },
     Nationality:{
         type: String,
         required: false
     },
-    Profile_Pic:{
-        type:String,
-        required: true,
-        default:'images/profile.jpg'
-    },
-    Followers:[{
+    /*Followers:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: User
     }],
     Following:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: User
-    }],
+    }],*/
   });
-  const User = mongoose.model('User', UserSchema);
-  module.exports = User;
+
+const User = mongoose.model('User', UserSchema);
+module.exports = User;
