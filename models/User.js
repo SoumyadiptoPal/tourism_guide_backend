@@ -14,14 +14,14 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    Profile_Pic:{
+        type: String,
+        required: true,
+        default:'images/profile.jpg'
+    },
     Nationality:{
         type: String,
         required: false
-    },
-    Profile_Pic:{
-        type:String,
-        //required: true,
-        //default:'images/profile.jpg'
     },
     /*Followers:[{
         type: mongoose.Schema.Types.ObjectId,
