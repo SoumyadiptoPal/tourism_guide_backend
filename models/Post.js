@@ -6,38 +6,31 @@ const PostSchema=new Schema({
         type: String
     }],
     Description:{
-        type: String
-    },
-    City:{
         type: String,
-        require: true
+		required: true
     },
-    Review_Type:{
+    Title:{
         type: String,
-        require: true
+		required: true
     },
-    Name:{
-        type: String
-    },
-    Rating:{
-        type: Number,
-        require: true
-    },
+	Tags:[{
+		type: String
+	}],
     Owner_id:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: 'User'
     },
     Likes:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: 'User'
     }],
     Comments:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: Comments
+        ref: 'Comment'
     }]
 },{
     timestamps: true
 })
 
 const Post = mongoose.model('Post', PostSchema);
-  module.exports = Post;
+module.exports = Post;
