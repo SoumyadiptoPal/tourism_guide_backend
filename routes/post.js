@@ -38,5 +38,23 @@ app.put('/create', requireLogin, async (req,res) => {
 	}
 });
 
+// GET the latest 100 posts
+app.get('/', requireLogin, async (req,res) => {
+	try {
+		const posts = await Post.find()
+		.sort({createdAt: -1})
+		.limit(100)
+		.then(posts => {
+			res.json({posts: posts, status: true});
+		})
+	} catch (err) {
+		console.log(e);
+		res.status(500).json({
+			errorMessage: 'There was an error while fetching posts',
+			status: false
+		});
+	}
+});
+
 module.exports = app;
 	
