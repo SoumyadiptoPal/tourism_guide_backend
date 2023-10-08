@@ -5,6 +5,7 @@ const cors = require('cors');
 // routes
 const app = express();
 const auth = require('./routes/auth');
+const post = require('./routes/post');
 
 // Connect Database
 connectDB();
@@ -18,6 +19,7 @@ app.use(express.urlencoded());
 
 // use Routes
 app.use('/auth', auth);
+app.use('/post', post);
 
 const port = process.env.PORT || 8082;
 
