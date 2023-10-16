@@ -8,7 +8,7 @@ app.put('/create', requireLogin, async (req,res) => {
 	try {
 		if (Title && Description) {
 			Post.create({
-				Owner_id: req.user, 
+				Owner_id: req.user._id, 
 				Title: Title,
 				Description: Description
 			})
@@ -48,9 +48,27 @@ app.get('/', requireLogin, async (req,res) => {
 			res.json({posts: posts, status: true});
 		})
 	} catch (err) {
-		console.log(e);
+		console.log(err);
 		res.status(500).json({
 			errorMessage: 'There was an error while fetching posts',
+			status: false
+		});
+	}
+});
+
+// Like Post
+app.post('/like', requireLogin, async (req,res) => {
+	try {
+		Post.findByIdAndUpdate(req.body._id, {
+			$push : { Likes: req.user._id }
+		})
+		.then(post => {
+			res.json({title: 'Post liked successfully', status: true});
+		})
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			errorMessage: 'There was an error while processing request',
 			status: false
 		});
 	}
