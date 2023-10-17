@@ -4,11 +4,11 @@ const { Schema }=mongoose
 const CommentSchema=new Schema({
     Author:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: 'User'
     },
     Likes:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: 'User'
     }]
 },{
     timestamps:true
