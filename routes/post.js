@@ -2,6 +2,7 @@ const express = require('express');
 const app = express.Router();
 const Post = require('../models/Post');
 const requireLogin = require('../middleware/requireLogin'); 
+const Comment = require('../models/Comment');
 
 app.put('/create', requireLogin, async (req,res) => {
 	const {Title,Description} = req.body;
@@ -65,6 +66,29 @@ app.post('/like', requireLogin, async (req,res) => {
 		.then(post => {
 			res.json({title: 'Post liked successfully', status: true});
 		})
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			errorMessage: 'There was an error while processing request',
+			status: false
+		});
+	}
+});
+
+app.post('/comment', requireLogin, async (req,res) => {
+	try {
+		Comment.create({
+			Owner_id: req.user._id,
+			Description: req.body.Description
+		})
+		.then(comment => {
+			Post.findByIdAndUpdate(req.body._id, {
+				$push : { Comments: comment._id }
+			})
+			.then(post => {
+				res.json({title: 'Commented successfully', status: true});
+			});	
+		})	
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({
