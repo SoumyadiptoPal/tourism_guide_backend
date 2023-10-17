@@ -2,10 +2,13 @@ const mongoose=require('mongoose')
 const { Schema }=mongoose
 
 const CommentSchema=new Schema({
-    Author:{
+    Owner_id:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+	Description:{
+		type: String
+	},
     Likes:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
