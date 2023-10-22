@@ -9,23 +9,22 @@ const jwt_secret = config.get('secret');
 const requireLogin = require('../middleware/requireLogin');
 
 app.post('/register', async (req,res) => {
-    const {_id,Name,Password,Profile_Pic} = req.body;
+    const {Email,Name,Password} = req.body;
     //console.log(Profile_Pic);
     try {
-        if (_id && Name && Password) {
+        if (Email && Name && Password) {
             // const salt = bcrypt.genSalt(saltRounds);
             const secPass = await bcrypt.hash(req.body.Password,saltRounds);
-            User.findOne({_id: _id})
+            User.findOne({Email: Email})
             .then(user => {
                 if (user) {
                     res.status(400).json({errorMessage: 'User already exists', status: false});
                 }
                 else {
                     User.create({
-                        _id: _id,
+						Email: Email,
                         Name: Name,
-                        Password: secPass,
-                        Profile_Pic: Profile_Pic
+                        Password: secPass
                     })
                     .then(user => {
                         res.json({title: 'User added successfully', status: true})
@@ -53,10 +52,10 @@ app.post('/register', async (req,res) => {
 });
 
 app.post('/login', async (req,res) => {
-    const {_id,Password} = req.body;
+    const {Email,Password} = req.body;
     try {
-        if (_id && Password) {
-            User.findOne({_id: _id})
+        if (Email && Password) {
+            User.findOne({Email: Email})
             .then(async user => {
                 if (user) {
                     const passwordCompare = await bcrypt.compare(Password, user.Password);
@@ -65,7 +64,7 @@ app.post('/login', async (req,res) => {
                         res.json({
                             title: 'Logged in successfully',
                             token: token,
-                            userId: _id,
+                            userId: user._id,
                             status: true
                         })
                         //res.json({title: 'Logged in successfully', status: true});
