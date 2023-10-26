@@ -5,13 +5,14 @@ const requireLogin = require('../middleware/requireLogin');
 const Comment = require('../models/Comment');
 
 app.put('/create', requireLogin, async (req,res) => {
-	const {Title,Description} = req.body;
+	const {Title,Description,Picture} = req.body;
 	try {
 		if (Title && Description) {
 			Post.create({
 				Owner_id: req.user._id, 
 				Title: Title,
-				Description: Description
+				Description: Description,
+				Picture: Picture
 			})
 			.then(post => {
 				res.json({title: 'Post added successfully', status: true})
