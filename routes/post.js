@@ -45,6 +45,7 @@ app.get('/', requireLogin, async (req,res) => {
 		const posts = await Post.find()
 		.sort({createdAt: -1})
 		.limit(100)
+		.populate("Owner_id","-Password")
 		.then(posts => {
 			res.json({posts: posts, status: true});
 		})
