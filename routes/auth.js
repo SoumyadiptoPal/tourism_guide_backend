@@ -27,7 +27,14 @@ app.post('/register', async (req,res) => {
                         Password: secPass
                     })
                     .then(user => {
-                        res.json({title: 'User added successfully', status: true})
+                        const token = jwt.sign({_id:user._id},jwt_secret);
+                        res.json({
+                            title: 'Logged in successfully',
+                            token: token,
+                            userId: user._id,
+                            user: user,
+                            status: true
+                        })
                     })
                     .catch(err => {
                         console.log(err);
@@ -65,6 +72,7 @@ app.post('/login', async (req,res) => {
                             title: 'Logged in successfully',
                             token: token,
                             userId: user._id,
+                            user: user,
                             status: true
                         })
                         //res.json({title: 'Logged in successfully', status: true});
