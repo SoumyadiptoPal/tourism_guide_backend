@@ -27,7 +27,14 @@ app.post('/register', async (req,res) => {
                         Password: secPass
                     })
                     .then(user => {
-                        res.json({title: 'User added successfully', status: true})
+                        const token = jwt.sign({_id:user._id},jwt_secret);
+                        res.json({
+                            title: 'Logged in successfully',
+                            token: token,
+                            userId: user._id,
+                            user: user,
+                            status: true
+                        })
                     })
                     .catch(err => {
                         console.log(err);
@@ -65,6 +72,7 @@ app.post('/login', async (req,res) => {
                             title: 'Logged in successfully',
                             token: token,
                             userId: user._id,
+                            user: user,
                             status: true
                         })
                         //res.json({title: 'Logged in successfully', status: true});
@@ -105,4 +113,43 @@ app.get('/protected',requireLogin,async (req,res) => {
     });
 });
 
+app.post('/addFollower', requireLogin, async (req,res) => {
+	try {
+		await User.findByIdAndUpdate(req.body._id, {
+			$push : { Followers: req.user._id }
+		})
+        await User.findByIdAndUpdate(req.user._id,{
+            $push : { Following: req.body._id }
+        })
+		
+		res.json({title: 'Following added successfully', status: true});
+		
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			errorMessage: 'There was an error while processing request',
+			status: false
+		});
+	}
+});
+
+app.post('/removeFollower', requireLogin, async (req,res) => {
+	try {
+		await User.findByIdAndUpdate(req.body._id, {
+			$pull : { Followers: req.user._id }
+		})
+        await User.findByIdAndUpdate(req.user._id,{
+            $pull : { Following: req.body._id }
+        })
+		
+		res.json({title: 'Following removed successfully', status: true});
+		
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			errorMessage: 'There was an error while processing request',
+			status: false
+		});
+	}
+});
 module.exports = app;
