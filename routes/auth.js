@@ -113,4 +113,43 @@ app.get('/protected',requireLogin,async (req,res) => {
     });
 });
 
+app.post('/addFollower', requireLogin, async (req,res) => {
+	try {
+		await User.findByIdAndUpdate(req.body._id, {
+			$push : { Followers: req.user._id }
+		})
+        await User.findByIdAndUpdate(req.user._id,{
+            $push : { Following: req.body._id }
+        })
+		
+		res.json({title: 'Following added successfully', status: true});
+		
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			errorMessage: 'There was an error while processing request',
+			status: false
+		});
+	}
+});
+
+app.post('/removeFollower', requireLogin, async (req,res) => {
+	try {
+		await User.findByIdAndUpdate(req.body._id, {
+			$pull : { Followers: req.user._id }
+		})
+        await User.findByIdAndUpdate(req.user._id,{
+            $pull : { Following: req.body._id }
+        })
+		
+		res.json({title: 'Following removed successfully', status: true});
+		
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({
+			errorMessage: 'There was an error while processing request',
+			status: false
+		});
+	}
+});
 module.exports = app;
