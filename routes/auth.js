@@ -152,4 +152,29 @@ app.post('/removeFollower', requireLogin, async (req,res) => {
 		});
 	}
 });
+
+const getUserDetails = async (userId) => {
+    try {
+      const user = await User.findById(userId);
+      return { _id: user._id, Name: user.Name, Profile_Pic: user.Profile_Pic };
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const fetchUserDetails = async (userIds) => {
+    const userPromises = userIds.map(getUserDetails);
+    const userDetails = await Promise.all(userPromises);
+    return userDetails.filter((user) => user !== null);
+  };
+app.post('/populate', requireLogin, async(req,res)=>{
+    fetchUserDetails(req.body.ids)
+  .then((userDetails) => {
+    res.json({ans: userDetails,status:true})
+  })
+  .catch((error) => {
+    console.error('Error fetching user details:', error.message);
+    res.json({ans: null, status:false});
+  });
+})
 module.exports = app;
