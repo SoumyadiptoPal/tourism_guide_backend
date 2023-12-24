@@ -1,11 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const app = express.Router();
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const config = require('config');
+
 const saltRounds = 10;
-const jwt_secret = config.get('secret');
+const secret= process.env.SECRET;
+const jwt_secret = secret
 const requireLogin = require('../middleware/requireLogin');
 
 app.post('/register', async (req,res) => {

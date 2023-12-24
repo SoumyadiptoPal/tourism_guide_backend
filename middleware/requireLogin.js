@@ -1,8 +1,9 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/User');
-const config = require('config');
-const jwt_secret = config.get('secret');
+const secret= process.env.SECRET;
+const jwt_secret = secret
 
 module.exports = (req,res,next) => {
     const {authorization} = req.headers;
