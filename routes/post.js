@@ -47,6 +47,8 @@ app.get('/', requireLogin, async (req,res) => {
 		.sort({createdAt: -1})
 		.limit(100)
 		.populate("Owner_id","-Password")
+		.populate("Likes")
+		.populate("Comments")
 		.then(posts => {
 			res.json({posts: posts, status: true});
 		})
@@ -100,5 +102,18 @@ app.post('/comment', requireLogin, async (req,res) => {
 	}
 });
 
+app.get('/getallposts',requireLogin, async(req,res)=>{
+    const response=Post.find({["Owner_id"]:req.query._id})
+	.then(posts=>{
+		res.json({posts: posts, status: true})
+	})
+	.catch(error=>{
+		console.log("Error in fetching", error)
+		res.status(500).json({
+			errorMessage: 'There was an error while processing request',
+			status: false
+		});
+	})
+})
 module.exports = app;
 	
