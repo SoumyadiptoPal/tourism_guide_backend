@@ -115,6 +115,21 @@ app.get('/protected',requireLogin,async (req,res) => {
     });
 });
 
+app.get('/userDetails', requireLogin, async (req,res) => {
+	const userId = req.body.userId;
+	try {
+		User.findOne({_id: userId})
+		.then(user => {
+			res.json(user);
+		});
+	} catch (e) {
+		res.status(500).json({
+			errorMessage: "Could not fetch user details!",
+			status: false
+		});
+	}
+});
+
 app.post('/addFollower', requireLogin, async (req,res) => {
 	try {
 		await User.findByIdAndUpdate(req.body._id, {
