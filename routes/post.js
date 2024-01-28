@@ -64,9 +64,11 @@ app.get('/', requireLogin, async (req,res) => {
 // Like Post
 app.post('/like', requireLogin, async (req,res) => {
 	try {
-		Post.findByIdAndUpdate(req.body._id, {
-			$push : { Likes: req.user._id }
-		})
+        const postData = await Post.findById(req.body._id);
+        const liked = postData['Likes'].some((obj) => obj.equals(req.user._id));
+        const query = (!liked) ? { $push : { Likes: req.user._id } } : { $pull : { Likes: req.user._id } }; 
+        console.log(liked); 
+		Post.findByIdAndUpdate(req.body._id,query)
 		.then(post => {
 			res.json({title: 'Post liked successfully', status: true});
 		})
