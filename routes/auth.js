@@ -23,11 +23,7 @@ app.post('/register', async (req,res) => {
                     res.status(400).json({errorMessage: 'User already exists', status: false});
                 }
                 else {
-                    User.create({
-						Email: Email,
-                        Name: Name,
-                        Password: secPass
-                    })
+                    User.create(req.body)
                     .then(user => {
                         const token = jwt.sign({_id:user._id},jwt_secret);
                         res.json({
